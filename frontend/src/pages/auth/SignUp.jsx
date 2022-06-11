@@ -21,30 +21,54 @@ const SignUp = () => {
     const navigate = useNavigate();
 
     const handleConnectWallet = async () => {
-        await connectWallet();
+        const wallet_address = await connectWallet();
+
+        try {
+            const response = await registerUser({ email, username, password, wallet_address });
+            const decoded = jwt_decode(response.token);
+            enqueueSnackbar("Registered Successfully!", { variant: 'success' });
+
+            localStorage.setItem("jwtToken", response.token);
+            dispatch(setCredential(decoded));
+            navigate("/");
+        } catch (err) {
+            if (err?.status == 409)
+                enqueueSnackbar("Registered User!", { variant: 'error' });
+            else if (err?.status == 500)
+                enqueueSnackbar("Internal Server Error!", { variant: 'error' });
+            else enqueueSnackbar("Error occured!", { variant: 'error' });
+        };
     }
 
     const validate = () => {
-        if (!email) {
-            enqueueSnackbar("Please type your email!", { variant: 'error' });
+        if (!account && !email && !username) {
+            enqueueSnackbar("Please enter any data!", { variant: 'error' });
 
             return false;
-        } else if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) == false) {
-            enqueueSnackbar("Invalid email!", { variant: 'error' });
+        } if (account) {
+            return true;
+        } else if (!account) {
+            if (!email) {
+                enqueueSnackbar("Please type your email!", { variant: 'error' });
 
-            return false;
-        } else if (!username) {
-            enqueueSnackbar("Please type your username!", { variant: 'error' });
+                return false;
+            } else if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) == false) {
+                enqueueSnackbar("Invalid email!", { variant: 'error' });
 
-            return false;
-        } else if (!password) {
-            enqueueSnackbar("Please type your password!", { variant: 'error' });
+                return false;
+            } else if (!username) {
+                enqueueSnackbar("Please type your username!", { variant: 'error' });
 
-            return false;
-        } else if (password !== repass) {
-            enqueueSnackbar("Mismatched password!", { variant: 'error' });
+                return false;
+            } else if (!password) {
+                enqueueSnackbar("Please type your password!", { variant: 'error' });
 
-            return false;
+                return false;
+            } else if (password !== repass) {
+                enqueueSnackbar("Mismatched password!", { variant: 'error' });
+
+                return false;
+            }
         }
         
         return true;

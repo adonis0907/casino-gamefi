@@ -15,7 +15,7 @@ const Header = () => {
         <section className="header bg-7">
             <div className="m2-mx-width mx-auto d-flex align-items-center justify-content-end">
                 {
-                    auth.username
+                    (auth.username || auth.wallet_address || auth.email)
                         ?
                             <button className="btn btn-primary cus-btn-primary btn-sm me-2" onClick={ handleLogout }>
                                 <span>Sign Out</span>

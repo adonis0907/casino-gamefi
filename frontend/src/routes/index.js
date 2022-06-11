@@ -13,7 +13,7 @@ const MainRoutes = () => {
     const auth = useSelector(state => state.auth);
     const dispatch = useDispatch();
 
-    let isLoggined = !!auth.username;
+    let isLoggined = !!(auth.username || auth.wallet_address);
 
     const authRedirect = element => {
         if (isLoggined)

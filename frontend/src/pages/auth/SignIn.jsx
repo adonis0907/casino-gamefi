@@ -44,6 +44,7 @@ const SignIn = () => {
                 wallet_address = await connectWallet();
             else if(!validate())
                 return;
+            
             const response = await loginUser({ wallet_address, email, password });
             const decoded = jwt_decode(response.token);
             enqueueSnackbar("Logged in Successfully!", { variant: 'success' });
