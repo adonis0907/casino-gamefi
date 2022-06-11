@@ -1,0 +1,12 @@
+h2.or {
+    width: 100%; 
+    text-align: center; 
+    border-bottom: 1px solid #000; 
+    line-height: 5em;
+    margin: 10px 0 20px; 
+ } 
+ 
+h2.or span { 
+    background:#fff; 
+    padding:0 10px; 
+}
